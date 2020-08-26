@@ -1,0 +1,30 @@
+variables:
+  GIT_SSL_NO_VERIFY: "1"
+
+stages:
+  - check
+  - test
+
+check:
+  tags:
+    - ebox
+    - eboxstack
+    - dev-tools
+  stage: check
+  script:
+    - docker -v
+    - pyenv -v
+    - pipenv --version
+
+test:
+  tags:
+    - ebox
+    - eboxstack
+    - dev-tools
+  stage: test
+  dependencies:
+    - check
+  script:
+    - pipenv install --dev
+    - cp -f env .env
+    - pipenv run pytest -s -v --color=yes
